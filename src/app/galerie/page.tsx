@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Galerie - Toutenmel",
   description:
     "Découvrez les créations de Mel : toiles, fluide art, aérographe et customisations uniques.",
+  alternates: { canonical: "/galerie" },
+  openGraph: { title: "Galerie - Toutenmel", description: "Découvrez les créations de Mel : toiles, fluide art, aérographe et customisations uniques.", url: "/galerie" },
 };
 
 export const revalidate = 60; // revalidate every 60 seconds

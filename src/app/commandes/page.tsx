@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   title: "Commandes personnalisées - Toutenmel",
   description:
     "Commandez une création unique : toile sur mesure, baskets customisées, aérographe... Mel réalise vos envies.",
+  alternates: { canonical: "/commandes" },
+  openGraph: { title: "Commandes personnalisées - Toutenmel", description: "Commandez une création unique : toile sur mesure, baskets customisées, aérographe... Mel réalise vos envies.", url: "/commandes" },
 };
 
 const steps = [

@@ -16,6 +16,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://toutenmel.fr"),
   title: "Toutenmel - L'univers artistique de Mel",
   description:
     "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations. Découvrez et achetez ses œuvres originales.",
@@ -28,6 +29,35 @@ export const metadata: Metadata = {
     "artiste peintre",
     "toutenmel",
   ],
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "Toutenmel",
+    title: "Toutenmel - L'univers artistique de Mel",
+    description: "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations.",
+    images: [{ url: "/logotoutenmel.png", width: 600, height: 300, alt: "Toutenmel" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Toutenmel - L'univers artistique de Mel",
+    description: "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations.",
+    images: ["/logotoutenmel.png"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Mel",
+  jobTitle: "Artiste peintre autodidacte",
+  url: "https://toutenmel.fr",
+  image: "https://toutenmel.fr/logotoutenmel.png",
+  description: "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations uniques.",
+  knowsAbout: ["Peinture", "Fluide Art", "Aérographe", "Customisation", "Art contemporain"],
+  makesOffer: {
+    "@type": "Offer",
+    itemOffered: { "@type": "CreativeWork", name: "Oeuvres d'art originales" },
+  },
 };
 
 export default function RootLayout({
@@ -38,6 +68,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={`${inter.variable} ${caveat.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />

@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   title: "Contact - Toutenmel",
   description:
     "Contactez Mel pour toute question sur ses œuvres, commandes ou collaborations.",
+  alternates: { canonical: "/contact" },
+  openGraph: { title: "Contact - Toutenmel", description: "Contactez Mel pour toute question sur ses œuvres, commandes ou collaborations.", url: "/contact" },
 };
 
 export default function Contact() {

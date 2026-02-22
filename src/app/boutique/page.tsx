@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: "Boutique - Toutenmel",
   description:
     "Achetez les œuvres originales de Mel. Paiement sécurisé, livraison soignée.",
+  alternates: { canonical: "/boutique" },
+  openGraph: { title: "Boutique - Toutenmel", description: "Achetez les œuvres originales de Mel. Paiement sécurisé, livraison soignée.", url: "/boutique" },
 };
 
 export const revalidate = 60;

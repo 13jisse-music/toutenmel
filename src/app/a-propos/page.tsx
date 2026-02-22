@@ -4,6 +4,8 @@ export const metadata: Metadata = {
   title: "À propos - Toutenmel",
   description:
     "Mel, artiste peintre autodidacte. Découvrez son parcours, son univers et sa passion pour la couleur.",
+  alternates: { canonical: "/a-propos" },
+  openGraph: { title: "À propos - Toutenmel", description: "Mel, artiste peintre autodidacte. Découvrez son parcours, son univers et sa passion pour la couleur.", url: "/a-propos" },
 };
 
 export default function APropos() {
