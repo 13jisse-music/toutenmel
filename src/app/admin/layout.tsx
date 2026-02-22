@@ -5,6 +5,7 @@ const adminNav = [
   { name: "Tableau de bord", href: "/admin", icon: "📊" },
   { name: "Mes oeuvres", href: "/admin/oeuvres", icon: "🎨" },
   { name: "Commandes", href: "/admin/commandes", icon: "📦" },
+  { name: "Clients", href: "/admin/clients", icon: "👥" },
   { name: "Messages", href: "/admin/messages", icon: "💬" },
 ];
 
