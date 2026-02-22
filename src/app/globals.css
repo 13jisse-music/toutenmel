@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Palette vibrante artiste */
+  --color-cream: #FFF8F0;
+  --color-cream-dark: #F5EDE3;
+  --color-warm-brown: #2D1810;
+  --color-warm-gray: #5C4A3D;
+
+  /* Couleurs vives */
+  --color-coral: #FF5E5B;
+  --color-coral-dark: #E04845;
+  --color-magenta: #D72483;
+  --color-fuchsia: #FF47B0;
+  --color-amber: #FFB627;
+  --color-amber-light: #FFD166;
+  --color-orange: #FF8C42;
+  --color-turquoise: #06D6A0;
+  --color-electric-blue: #118AB2;
+  --color-violet: #7B2D8E;
+  --color-blush: #F2C4B3;
+  --color-sage: #06D6A0;
+  --color-lemon: #F7F052;
+
+  --font-heading: var(--font-caveat);
+  --font-body: var(--font-inter);
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes paintSplash {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: scale(1) rotate(15deg); opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-warm-brown);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading), cursive;
+}
+
+/* Paint splash decorative blobs */
+.paint-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* Colorful underline effect */
+.paint-underline {
+  position: relative;
+  display: inline-block;
+}
+.paint-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  right: -4px;
+  height: 12px;
+  background: linear-gradient(90deg, var(--color-amber), var(--color-coral), var(--color-magenta), var(--color-violet));
+  border-radius: 4px;
+  z-index: -1;
+  opacity: 0.4;
+  transform: rotate(-1deg);
+}
+
+/* Card hover paint effect */
+.art-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.art-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(255, 94, 91, 0.15), 0 4px 12px rgba(215, 36, 131, 0.1);
+}
+.art-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-coral), var(--color-amber), var(--color-magenta), var(--color-turquoise));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.art-card:hover::before {
+  opacity: 1;
+}
+
+/* Rainbow border for special sections */
+.rainbow-border {
+  border-image: linear-gradient(90deg, var(--color-coral), var(--color-amber), var(--color-magenta), var(--color-turquoise), var(--color-electric-blue)) 1;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-coral), var(--color-magenta), var(--color-violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button paint style */
+.btn-paint {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.btn-paint::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-coral), var(--color-magenta));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.btn-paint:hover::after {
+  opacity: 1;
+}
+.btn-paint span {
+  position: relative;
+  z-index: 1;
+}
