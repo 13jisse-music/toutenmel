@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navigation = [
   { name: "Accueil", href: "/" },
@@ -15,6 +16,9 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <header className="sticky top-0 z-50 border-b-2" style={{ borderImage: "linear-gradient(90deg, #FF5E5B, #FFB627, #D72483, #06D6A0, #118AB2) 1", background: "rgba(255,248,240,0.92)", backdropFilter: "blur(12px)" }}>

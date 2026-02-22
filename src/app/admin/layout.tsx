@@ -70,16 +70,16 @@ export default function AdminLayout({
       </div>
 
       {/* Mobile nav */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-warm-brown border-t border-cream/10">
-        <div className="flex justify-around py-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-warm-brown border-t border-cream/10 overflow-x-auto scrollbar-hide">
+        <div className="flex py-2 px-1 min-w-max">
           {adminNav.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className="flex flex-col items-center gap-1 text-cream/60 hover:text-cream transition-colors py-1 px-2"
+              className="flex flex-col items-center gap-0.5 text-cream/60 hover:text-cream transition-colors py-1 px-3 flex-shrink-0"
             >
               <span className="text-lg">{item.icon}</span>
-              <span className="text-[10px]">{item.name}</span>
+              <span className="text-[10px] whitespace-nowrap">{item.name}</span>
             </Link>
           ))}
         </div>

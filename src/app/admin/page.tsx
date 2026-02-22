@@ -52,12 +52,12 @@ export default async function AdminDashboard() {
       </h1>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
         {stats.map((stat) => (
-          <div key={stat.label} className={`bg-gradient-to-br ${stat.color} rounded-2xl p-5 text-white`}>
-            <p className="text-white/80 text-sm font-medium">{stat.label}</p>
-            <p className="text-3xl font-bold mt-1">{stat.value}</p>
-            <p className="text-white/60 text-xs mt-1">{stat.change}</p>
+          <div key={stat.label} className={`bg-gradient-to-br ${stat.color} rounded-xl p-3 sm:p-5 text-white`}>
+            <p className="text-white/80 text-xs sm:text-sm font-medium">{stat.label}</p>
+            <p className="text-2xl sm:text-3xl font-bold mt-0.5">{stat.value}</p>
+            <p className="text-white/60 text-[10px] sm:text-xs mt-0.5">{stat.change}</p>
           </div>
         ))}
       </div>
