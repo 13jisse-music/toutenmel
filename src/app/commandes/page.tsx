@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import CommandeForm from "@/components/CommandeForm";
 
 export const metadata: Metadata = {
@@ -76,6 +77,17 @@ export default function Commandes() {
               </h2>
               <CommandeForm />
             </div>
+          </div>
+
+          {/* Lien suivi */}
+          <div className="text-center mt-10">
+            <p className="text-warm-gray mb-2">Vous avez déjà passé commande ?</p>
+            <Link
+              href="/suivi"
+              className="inline-block text-magenta hover:text-coral font-semibold transition-colors text-lg"
+            >
+              Suivre ma commande &rarr;
+            </Link>
           </div>
         </div>
       </div>
