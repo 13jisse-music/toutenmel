@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "À propos - Toutenmel",
   description:
-    "Mélanie, alias Mel. Artiste peintre autodidacte. Découvrez son parcours, son univers et sa passion pour la couleur.",
+    "Mel, artiste peintre autodidacte. Découvrez son parcours, son univers et sa passion pour la couleur.",
 };
 
 export default function APropos() {
@@ -34,8 +34,7 @@ export default function APropos() {
           {/* Official text with artistic styling */}
           <div className="space-y-8 text-lg leading-relaxed">
             <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center">
-              Mélanie, alias Mel.
-              <br />Artiste peintre autodidacte.
+              Mel, artiste peintre autodidacte.
             </p>
 
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-coral">

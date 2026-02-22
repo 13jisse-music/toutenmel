@@ -18,7 +18,7 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "Toutenmel - L'univers artistique de Mel",
   description:
-    "Mélanie, alias Mel. Artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations. Découvrez et achetez ses œuvres originales.",
+    "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations. Découvrez et achetez ses œuvres originales.",
   keywords: [
     "art",
     "peinture",
