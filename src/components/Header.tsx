@@ -36,7 +36,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-warm-gray hover:text-coral font-medium transition-colors py-2 group"
+                className="relative text-warm-gray hover:text-coral font-heading text-xl font-bold transition-colors py-2 group"
               >
                 {item.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-coral to-magenta group-hover:w-full transition-all duration-300" />
@@ -68,7 +68,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="block py-3 text-lg text-warm-brown hover:text-coral transition-colors font-medium"
+                className="block py-3 text-xl text-warm-brown hover:text-coral transition-colors font-heading font-bold"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.name}
