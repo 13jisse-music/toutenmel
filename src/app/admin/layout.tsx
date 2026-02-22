@@ -42,12 +42,20 @@ export default function AdminLayout({
           ))}
         </nav>
         <div className="absolute bottom-0 w-64 p-4 border-t border-cream/10">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-cream/50 hover:text-cream transition-colors text-sm"
-          >
-            &larr; Retour au site
-          </Link>
+          <div className="flex flex-col gap-2">
+            <Link
+              href="/admin/logout"
+              className="text-cream/50 hover:text-cream transition-colors text-sm"
+            >
+              Déconnexion
+            </Link>
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-cream/50 hover:text-cream transition-colors text-sm"
+            >
+              &larr; Retour au site
+            </Link>
+          </div>
         </div>
       </aside>
 
