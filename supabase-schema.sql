@@ -42,6 +42,23 @@ CREATE TABLE messages (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Table des factures
+CREATE TABLE factures (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  numero TEXT NOT NULL UNIQUE,
+  commande_id UUID REFERENCES commandes(id),
+  client_name TEXT NOT NULL,
+  client_email TEXT NOT NULL,
+  items JSONB NOT NULL DEFAULT '[]',
+  subtotal INTEGER NOT NULL DEFAULT 0,
+  tax INTEGER NOT NULL DEFAULT 0,
+  total INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'brouillon' CHECK (status IN ('brouillon', 'envoyee', 'payee')),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- =============================================
 -- RLS POLICIES (sécurité)
 -- =============================================
@@ -57,6 +74,9 @@ CREATE POLICY "Créer une commande" ON commandes FOR INSERT WITH CHECK (true);
 -- Messages : insertion publique (formulaire contact), lecture admin
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Envoyer un message" ON messages FOR INSERT WITH CHECK (true);
+
+-- Factures : admin seulement
+ALTER TABLE factures ENABLE ROW LEVEL SECURITY;
 
 -- =============================================
 -- Storage bucket pour les photos

@@ -159,3 +159,14 @@ h1, h2, h3 {
   position: relative;
   z-index: 1;
 }
+
+/* Print styles for invoices */
+@media print {
+  body { background: white !important; }
+  aside, nav, .print\:hidden { display: none !important; }
+  main { padding: 0 !important; margin: 0 !important; }
+  .print\:shadow-none { box-shadow: none !important; }
+  .print\:rounded-none { border-radius: 0 !important; }
+  .print\:p-0 { padding: 0 !important; }
+  .print\:bg-gray-50 { background-color: #f9fafb !important; }
+}
