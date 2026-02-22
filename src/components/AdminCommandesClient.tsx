@@ -36,10 +36,50 @@ function StatusBadge({ status }: { status: string }) {
 export default function AdminCommandesClient({ commandes: initial }: { commandes: Commande[] }) {
   const [commandes, setCommandes] = useState(initial);
   const [filter, setFilter] = useState("Tout");
+  const [search, setSearch] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
-  const filtered = filter === "Tout"
+  let filtered = filter === "Tout"
     ? commandes
     : commandes.filter((c) => c.status === filter);
+
+  if (search) {
+    const q = search.toLowerCase();
+    filtered = filtered.filter(
+      (c) => c.client_name.toLowerCase().includes(q) || c.client_email.toLowerCase().includes(q)
+    );
+  }
+
+  if (dateFrom) {
+    filtered = filtered.filter((c) => c.created_at >= dateFrom);
+  }
+  if (dateTo) {
+    const end = dateTo + "T23:59:59";
+    filtered = filtered.filter((c) => c.created_at <= end);
+  }
+
+  function exportCSV() {
+    const headers = ["Date", "Client", "Email", "Type", "Support", "Description", "Budget", "Statut"];
+    const rows = filtered.map((c) => [
+      new Date(c.created_at).toLocaleDateString("fr-FR"),
+      c.client_name,
+      c.client_email,
+      c.type,
+      c.support || "",
+      (c.description || "").replace(/"/g, '""'),
+      c.budget || "",
+      c.status,
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((v) => `"${v}"`).join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `commandes-toutenmel-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   async function handleStatusChange(id: string, newStatus: string) {
     const res = await fetch(`/api/admin/commandes/${id}`, {
@@ -54,10 +94,47 @@ export default function AdminCommandesClient({ commandes: initial }: { commandes
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-warm-brown mb-2">Commandes</h1>
-      <p className="text-warm-gray mb-8">{commandes.length} commandes au total</p>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-3xl font-bold text-warm-brown">Commandes</h1>
+        <button
+          onClick={exportCSV}
+          className="text-sm font-medium text-coral hover:text-coral-dark transition-colors border border-coral/30 px-4 py-2 rounded-full hover:bg-coral/5"
+        >
+          Exporter CSV
+        </button>
+      </div>
+      <p className="text-warm-gray mb-6">{commandes.length} commandes au total — {filtered.length} affichées</p>
 
-      {/* Filters */}
+      {/* Search + Date filters */}
+      <div className="flex flex-wrap gap-3 mb-4">
+        <input
+          type="text"
+          placeholder="Rechercher un client..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="rounded-xl border-2 border-cream-dark px-4 py-2 text-sm text-warm-brown focus:outline-none focus:border-coral w-full sm:w-64"
+        />
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-warm-gray">Du</label>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className="rounded-xl border-2 border-cream-dark px-3 py-2 text-sm text-warm-brown focus:outline-none focus:border-coral"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-warm-gray">Au</label>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            className="rounded-xl border-2 border-cream-dark px-3 py-2 text-sm text-warm-brown focus:outline-none focus:border-coral"
+          />
+        </div>
+      </div>
+
+      {/* Status filters */}
       <div className="flex flex-wrap gap-2 mb-6">
         {["Tout", ...allStatuses].map((f) => (
           <button

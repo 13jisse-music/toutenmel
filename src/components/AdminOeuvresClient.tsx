@@ -21,12 +21,26 @@ function StatusBadge({ status }: { status: string }) {
 export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuvre[] }) {
   const [oeuvres, setOeuvres] = useState(initial);
   const [filter, setFilter] = useState("Tout");
+  const [categoryFilter, setCategoryFilter] = useState("Tout");
+  const [sortBy, setSortBy] = useState<"date" | "price-asc" | "price-desc">("date");
   const [deleting, setDeleting] = useState<string | null>(null);
   const router = useRouter();
 
-  const filtered = filter === "Tout"
+  const categories = ["Tout", ...Array.from(new Set(initial.map((o) => o.category)))];
+
+  let filtered = filter === "Tout"
     ? oeuvres
     : oeuvres.filter((o) => o.status === filter.toLowerCase());
+
+  if (categoryFilter !== "Tout") {
+    filtered = filtered.filter((o) => o.category === categoryFilter);
+  }
+
+  filtered = [...filtered].sort((a, b) => {
+    if (sortBy === "price-asc") return a.price - b.price;
+    if (sortBy === "price-desc") return b.price - a.price;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 
   async function handleDelete(id: string) {
     if (!confirm("Supprimer cette oeuvre ?")) return;
@@ -65,7 +79,7 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-4">
         {["Tout", "Disponible", "Vendu", "Sur commande"].map((f) => (
           <button
             key={f}
@@ -79,6 +93,28 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
             {f}
           </button>
         ))}
+      </div>
+
+      {/* Category filter + Sort */}
+      <div className="flex flex-wrap gap-3 mb-6">
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="rounded-xl border-2 border-cream-dark px-3 py-2 text-sm text-warm-brown focus:outline-none focus:border-coral"
+        >
+          {categories.map((c) => (
+            <option key={c} value={c}>{c === "Tout" ? "Toutes catégories" : c}</option>
+          ))}
+        </select>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as "date" | "price-asc" | "price-desc")}
+          className="rounded-xl border-2 border-cream-dark px-3 py-2 text-sm text-warm-brown focus:outline-none focus:border-coral"
+        >
+          <option value="date">Plus récent</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="price-asc">Prix croissant</option>
+        </select>
       </div>
 
       {/* Table */}
