@@ -200,7 +200,7 @@ export default async function Home() {
                   return (
                     <Link
                       key={cat.name}
-                      href="/galerie"
+                      href="/boutique"
                       className={`art-card bg-gradient-to-br ${cat.gradient} rounded-2xl p-6 sm:p-8 text-white text-center`}
                     >
                       <span className="text-4xl">{cat.icon}</span>

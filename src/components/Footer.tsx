@@ -39,11 +39,11 @@ export default function Footer() {
             <div>
               <h4 className="font-heading text-2xl text-amber-light mb-4">Navigation</h4>
               <ul className="space-y-2 text-cream/60">
-                <li><Link href="/galerie" className="hover:text-coral transition-colors">Galerie</Link></li>
-                <li><Link href="/boutique" className="hover:text-amber transition-colors">Boutique</Link></li>
-                <li><Link href="/commandes" className="hover:text-magenta transition-colors">Commandes</Link></li>
-                <li><Link href="/a-propos" className="hover:text-turquoise transition-colors">À propos</Link></li>
-                <li><Link href="/contact" className="hover:text-electric-blue transition-colors">Contact</Link></li>
+                <li><Link href="/boutique" className="hover:text-coral transition-colors">Boutique</Link></li>
+                <li><Link href="/commandes" className="hover:text-amber transition-colors">Commandes</Link></li>
+                <li><Link href="/a-propos" className="hover:text-magenta transition-colors">À propos</Link></li>
+                <li><Link href="/contact" className="hover:text-turquoise transition-colors">Contact</Link></li>
+                <li><Link href="/faq" className="hover:text-electric-blue transition-colors">FAQ</Link></li>
               </ul>
             </div>
 

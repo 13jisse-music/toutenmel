@@ -54,7 +54,7 @@ export default async function APropos() {
           {/* Photo with colorful border */}
           <div className="relative max-w-2xl mx-auto mb-14">
             <div className="absolute -inset-1 bg-gradient-to-r from-coral via-amber to-magenta rounded-2xl blur-sm" />
-            <div className="relative aspect-video rounded-2xl overflow-hidden">
+            <div className="relative aspect-[3/4] sm:aspect-[4/3] rounded-2xl overflow-hidden">
               {photoUrl ? (
                 <Image
                   src={photoUrl}
