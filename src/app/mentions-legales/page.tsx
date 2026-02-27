@@ -1,11 +1,26 @@
 import type { Metadata } from "next";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata: Metadata = {
   title: "Mentions légales — Toutenmel",
   description: "Mentions légales du site toutenmel.fr",
 };
 
-export default function MentionsLegales() {
+export const revalidate = 60;
+
+async function getSettings() {
+  const { data } = await supabaseAdmin
+    .from("site_settings")
+    .select("*")
+    .eq("id", "main")
+    .single();
+  return data;
+}
+
+export default async function MentionsLegales() {
+  const s = await getSettings();
+  const name = s?.legal_name || "[Non renseigné]";
+
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20">
       <h1 className="text-4xl sm:text-5xl font-heading font-bold gradient-text mb-10">
@@ -14,38 +29,28 @@ export default function MentionsLegales() {
 
       <div className="space-y-8 text-warm-gray leading-relaxed">
         <Section title="Éditeur du site">
-          <p>
-            <strong>Nom :</strong> [NOM COMPLET DE MEL — À COMPLÉTER]
-          </p>
-          <p>
-            <strong>Statut :</strong> [Micro-entrepreneur / Artiste-auteur — À COMPLÉTER]
-          </p>
-          <p>
-            <strong>SIRET :</strong> [NUMÉRO SIRET — À COMPLÉTER]
-          </p>
-          <p>
-            <strong>Adresse :</strong> [ADRESSE POSTALE — À COMPLÉTER]
-          </p>
+          <p><strong>Nom :</strong> {name}</p>
+          <p><strong>Statut :</strong> {s?.legal_status || "[Non renseigné]"}</p>
+          <p><strong>SIRET :</strong> {s?.siret || "[Non renseigné]"}</p>
+          <p><strong>Adresse :</strong> {s?.address || "[Non renseigné]"}</p>
+          {s?.phone && <p><strong>Téléphone :</strong> {s.phone}</p>}
           <p>
             <strong>Email :</strong>{" "}
             <a href="mailto:toutenmel@gmail.com" className="text-coral hover:text-magenta transition-colors">
               toutenmel@gmail.com
             </a>
           </p>
-          <p>
-            <strong>Directrice de la publication :</strong> [NOM COMPLET DE MEL — À COMPLÉTER]
-          </p>
+          <p><strong>Directrice de la publication :</strong> {name}</p>
         </Section>
 
         <Section title="Hébergement">
+          <p><strong>Hébergeur :</strong> Vercel Inc.</p>
+          <p>440 N Barranca Ave #4133, Covina, CA 91723, États-Unis</p>
           <p>
-            <strong>Hébergeur :</strong> Vercel Inc.
-          </p>
-          <p>
-            440 N Barranca Ave #4133, Covina, CA 91723, États-Unis
-          </p>
-          <p>
-            Site : <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-coral hover:text-magenta transition-colors">vercel.com</a>
+            Site :{" "}
+            <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="text-coral hover:text-magenta transition-colors">
+              vercel.com
+            </a>
           </p>
         </Section>
 
@@ -53,7 +58,7 @@ export default function MentionsLegales() {
           <p>
             L&apos;ensemble du contenu de ce site (textes, images, photographies,
             illustrations, oeuvres d&apos;art, logos) est la propriété exclusive de
-            Toutenmel / [NOM DE MEL] et est protégé par le droit d&apos;auteur
+            Toutenmel / {name} et est protégé par le droit d&apos;auteur
             (Code de la propriété intellectuelle).
           </p>
           <p>

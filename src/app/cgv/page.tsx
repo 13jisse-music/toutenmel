@@ -1,11 +1,29 @@
 import type { Metadata } from "next";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata: Metadata = {
   title: "Conditions Générales de Vente — Toutenmel",
   description: "CGV du site toutenmel.fr — Vente d'oeuvres d'art originales",
 };
 
-export default function CGV() {
+export const revalidate = 60;
+
+async function getSettings() {
+  const { data } = await supabaseAdmin
+    .from("site_settings")
+    .select("*")
+    .eq("id", "main")
+    .single();
+  return data;
+}
+
+export default async function CGV() {
+  const s = await getSettings();
+  const name = s?.legal_name || "[Non renseigné]";
+  const region = s?.region || "[Non renseigné]";
+  const mediatorName = s?.mediator_name || "CM2C";
+  const mediatorUrl = s?.mediator_url || "https://www.cm2c.net";
+
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20">
       <h1 className="text-4xl sm:text-5xl font-heading font-bold gradient-text mb-10">
@@ -17,7 +35,7 @@ export default function CGV() {
           <p>
             Les présentes Conditions Générales de Vente (CGV) régissent les
             ventes d&apos;oeuvres d&apos;art originales et de créations
-            personnalisées réalisées par Toutenmel / [NOM DE MEL], artiste
+            personnalisées réalisées par Toutenmel / {name}, artiste
             peintre, via le site <strong>toutenmel.fr</strong>.
           </p>
           <p>
@@ -100,7 +118,7 @@ export default function CGV() {
           </p>
           <p>
             <strong>Remise en main propre :</strong> Possible sur rendez-vous
-            dans la région [RÉGION — À COMPLÉTER].
+            dans la région {region}.
           </p>
           <p>
             En cas de dommage constaté à la réception, le client doit émettre
@@ -174,9 +192,17 @@ export default function CGV() {
             service de médiation :
           </p>
           <p>
-            [NOM DU MÉDIATEUR — À COMPLÉTER]
+            <strong>{mediatorName}</strong>
             <br />
-            Site : [URL DU MÉDIATEUR — À COMPLÉTER]
+            Site :{" "}
+            <a
+              href={mediatorUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-coral hover:text-magenta transition-colors"
+            >
+              {mediatorUrl.replace("https://", "").replace("www.", "")}
+            </a>
           </p>
           <p>
             Plateforme européenne de règlement en ligne des litiges :{" "}
