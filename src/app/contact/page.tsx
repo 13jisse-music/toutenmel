@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
@@ -32,7 +33,9 @@ export default function Contact() {
                 <h2 className="text-3xl font-heading font-bold gradient-text mb-6">
                   Écrivez-moi
                 </h2>
-                <ContactForm />
+                <Suspense fallback={<div className="py-8 text-center text-warm-gray">Chargement...</div>}>
+                  <ContactForm />
+                </Suspense>
               </div>
             </div>
 

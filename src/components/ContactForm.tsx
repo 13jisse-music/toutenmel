@@ -1,8 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function ContactForm() {
+  const searchParams = useSearchParams();
+  const oeuvre = searchParams.get("oeuvre");
+  const prix = searchParams.get("prix");
+  const type = searchParams.get("type");
+
+  const defaultSubject = oeuvre
+    ? type === "commande"
+      ? "Commande personnalisée"
+      : "Achat d'une œuvre"
+    : "";
+
+  const defaultMessage = oeuvre
+    ? type === "commande"
+      ? `Bonjour Mel,\n\nJe suis intéressé(e) par « ${oeuvre} » (${prix}\u00A0€, sur commande).\n\nPourrais-tu me donner plus de détails sur les délais et les possibilités de personnalisation ?\n\nMerci !`
+      : `Bonjour Mel,\n\nJe suis intéressé(e) par l'œuvre « ${oeuvre} » (${prix}\u00A0€).\n\nEst-elle toujours disponible ? Comment procéder pour l'achat ?\n\nMerci !`
+    : "";
+
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -51,6 +69,15 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {oeuvre && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-coral/10 to-magenta/10 border border-coral/20">
+          <p className="text-sm text-warm-brown">
+            <span className="font-semibold">Oeuvre :</span> {oeuvre}
+            {prix && <span className="ml-2 font-bold gradient-text">{prix}&nbsp;&euro;</span>}
+          </p>
+        </div>
+      )}
+
       <div>
         <label htmlFor="name" className="block text-sm font-semibold text-warm-brown mb-1">Nom</label>
         <input
@@ -79,10 +106,12 @@ export default function ContactForm() {
           id="subject"
           name="subject"
           required
+          defaultValue={defaultSubject}
           className="w-full rounded-xl border-2 border-blush/50 px-4 py-3 text-warm-brown focus:outline-none focus:border-coral transition-colors"
         >
           <option value="">Choisir...</option>
-          <option value="Question sur une œuvre">Question sur une œuvre</option>
+          <option value="Achat d'une œuvre">Achat d&apos;une oeuvre</option>
+          <option value="Question sur une œuvre">Question sur une oeuvre</option>
           <option value="Commande personnalisée">Commande personnalisée</option>
           <option value="Collaboration / Événement">Collaboration / Événement</option>
           <option value="Autre">Autre</option>
@@ -96,6 +125,7 @@ export default function ContactForm() {
           name="message"
           rows={5}
           required
+          defaultValue={defaultMessage}
           placeholder="Votre message..."
           className="w-full rounded-xl border-2 border-blush/50 px-4 py-3 text-warm-brown placeholder:text-warm-gray/40 focus:outline-none focus:border-coral transition-colors"
         />

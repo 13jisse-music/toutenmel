@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import ShareButtons from "@/components/ShareButtons";
 import type { Oeuvre } from "@/lib/types";
 import { getGradient } from "@/lib/gradients";
@@ -173,9 +174,12 @@ function ProductCard({ product, index }: { product: Oeuvre; index: number }) {
             {product.status === "disponible" ? "Disponible" : "Sur commande"}
           </span>
         </div>
-        <button className="w-full mt-4 bg-gradient-to-r from-coral to-magenta text-white py-3 rounded-full font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02]">
-          {product.status === "disponible" ? "Ajouter au panier" : "Commander"}
-        </button>
+        <Link
+          href={`/contact?oeuvre=${encodeURIComponent(product.title)}&prix=${product.price}&type=${product.status === "disponible" ? "achat" : "commande"}`}
+          className="block w-full mt-4 bg-gradient-to-r from-coral to-magenta text-white py-3 rounded-full font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02] text-center"
+        >
+          {product.status === "disponible" ? "Je suis intéressé(e)" : "Commander"}
+        </Link>
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-cream-dark">
           <span className="text-xs text-warm-gray/50">Partager</span>
           <ShareButtons title={product.title} category={product.category} />
