@@ -161,7 +161,13 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                   <td className="px-6 py-4 text-sm text-warm-gray">
                     {new Date(oeuvre.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right space-x-3">
+                    <Link
+                      href={`/admin/oeuvres/${oeuvre.id}`}
+                      className="text-coral hover:text-magenta text-sm font-medium"
+                    >
+                      Modifier
+                    </Link>
                     <button
                       onClick={() => handleDelete(oeuvre.id)}
                       disabled={deleting === oeuvre.id}
@@ -188,7 +194,7 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                 <span className="text-warm-gray">{oeuvre.category}</span>
                 <span className="font-semibold text-warm-brown">{oeuvre.price} &euro;</span>
               </div>
-              <div className="flex gap-4 mt-2">
+              <div className="flex gap-4 mt-2 items-center">
                 <select
                   value={oeuvre.status}
                   onChange={(e) => handleStatusChange(oeuvre.id, e.target.value)}
@@ -198,6 +204,12 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                   <option value="vendu">Vendu</option>
                   <option value="sur commande">Sur commande</option>
                 </select>
+                <Link
+                  href={`/admin/oeuvres/${oeuvre.id}`}
+                  className="text-coral text-sm font-medium hover:text-magenta"
+                >
+                  Modifier
+                </Link>
                 <button
                   onClick={() => handleDelete(oeuvre.id)}
                   className="text-warm-gray text-sm hover:text-coral"
