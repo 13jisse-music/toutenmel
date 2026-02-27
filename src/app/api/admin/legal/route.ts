@@ -30,6 +30,12 @@ export async function PUT(request: NextRequest) {
       mediator_name: body.mediator_name,
       mediator_url: body.mediator_url,
       profile_photo_url: body.profile_photo_url,
+      hero_title: body.hero_title,
+      hero_subtitle: body.hero_subtitle,
+      hero_photo_url: body.hero_photo_url,
+      about_subtitle: body.about_subtitle,
+      about_text: body.about_text,
+      about_closing: body.about_closing,
       updated_at: new Date().toISOString(),
     })
     .eq("id", "main")

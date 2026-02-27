@@ -35,7 +35,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex md:gap-6">
+          <div className="hidden md:flex md:items-center md:gap-6">
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -46,6 +46,12 @@ export default function Header() {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-coral to-magenta group-hover:w-full transition-all duration-300" />
               </Link>
             ))}
+            <Link
+              href="/admin"
+              className="ml-2 bg-gradient-to-r from-coral to-magenta text-white px-5 py-2 rounded-full font-medium text-sm hover:shadow-lg hover:shadow-coral/30 transition-all"
+            >
+              Mon espace
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -78,6 +84,13 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            <Link
+              href="/admin"
+              className="block mt-2 py-3 text-center bg-gradient-to-r from-coral to-magenta text-white rounded-full font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Mon espace
+            </Link>
           </div>
         )}
       </nav>

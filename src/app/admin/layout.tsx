@@ -8,7 +8,7 @@ const adminNav = [
   { name: "Clients", href: "/admin/clients", icon: "👥" },
   { name: "Messages", href: "/admin/messages", icon: "💬" },
   { name: "Factures", href: "/admin/factures", icon: "📄" },
-  { name: "Infos légales", href: "/admin/legal", icon: "⚖️" },
+  { name: "Mon site", href: "/admin/legal", icon: "🌐" },
 ];
 
 export default function AdminLayout({

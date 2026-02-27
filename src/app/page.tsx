@@ -1,131 +1,97 @@
 import Image from "next/image";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import type { Oeuvre } from "@/lib/types";
 import { getGradient } from "@/lib/gradients";
 
 export const revalidate = 60;
 
-export default async function Home() {
-  const { data: oeuvres } = await supabase
-    .from("oeuvres")
+async function getSettings() {
+  const { data } = await supabaseAdmin
+    .from("site_settings")
     .select("*")
-    .order("created_at", { ascending: false });
+    .eq("id", "main")
+    .single();
+  return data;
+}
+
+export default async function Home() {
+  const [{ data: oeuvres }, settings] = await Promise.all([
+    supabase.from("oeuvres").select("*").order("created_at", { ascending: false }),
+    getSettings(),
+  ]);
 
   const allOeuvres = (oeuvres as Oeuvre[]) || [];
   const disponibles = allOeuvres.filter((o) => o.status === "disponible" || o.status === "sur commande");
-  const heroOeuvres = allOeuvres.filter((o) => o.image_url).slice(0, 6);
   const categories = [...new Set(allOeuvres.map((o) => o.category))];
+
+  const heroSubtitle = settings?.hero_subtitle || "Toiles, fluide art, aérographe & customisations uniques. Chaque création est une pièce originale, réalisée avec passion.";
+  const heroPhoto = settings?.hero_photo_url;
 
   return (
     <div className="relative overflow-hidden">
       {/* ═══════════════════════ HERO ═══════════════════════ */}
-      <section className="relative min-h-[80vh] flex items-center">
-        <div className="absolute top-5 left-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-coral/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-20 right-0 w-40 sm:w-64 lg:w-80 h-40 sm:h-64 lg:h-80 bg-magenta/15 rounded-full blur-3xl" style={{ animation: "float 4s ease-in-out infinite" }} />
-        <div className="absolute bottom-10 left-1/4 w-36 sm:w-56 lg:w-72 h-36 sm:h-56 lg:h-72 bg-amber/20 rounded-full blur-3xl" style={{ animation: "float 5s ease-in-out infinite" }} />
+      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-center">
+        {/* Photo de fond */}
+        {heroPhoto ? (
+          <>
+            <Image
+              src={heroPhoto}
+              alt="Toutenmel"
+              fill
+              className="object-cover object-center"
+              priority
+              quality={85}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-warm-brown/60 via-warm-brown/40 to-cream" />
+          </>
+        ) : (
+          <>
+            <div className="absolute top-5 left-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-coral/20 rounded-full blur-3xl animate-float" />
+            <div className="absolute top-20 right-0 w-40 sm:w-64 lg:w-80 h-40 sm:h-64 lg:h-80 bg-magenta/15 rounded-full blur-3xl" style={{ animation: "float 4s ease-in-out infinite" }} />
+            <div className="absolute bottom-10 left-1/4 w-36 sm:w-56 lg:w-72 h-36 sm:h-56 lg:h-72 bg-amber/20 rounded-full blur-3xl" style={{ animation: "float 5s ease-in-out infinite" }} />
+          </>
+        )}
 
-        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-            {/* Texte gauche */}
-            <div className="flex-1 text-center lg:text-left">
-              <Image
-                src="/logotoutenmel.png"
-                alt="Toutenmel"
-                width={400}
-                height={200}
-                className="mx-auto lg:mx-0 mb-6 w-[220px] sm:w-[320px] lg:w-[380px] h-auto"
-                priority
-              />
-              <p className="text-lg sm:text-xl text-warm-gray max-w-md mx-auto lg:mx-0 leading-relaxed">
-                Toiles, fluide art, aérographe &amp; customisations uniques.
-                Chaque création est une pièce originale, réalisée avec passion.
-              </p>
-              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                <Link
-                  href="/galerie"
-                  className="bg-gradient-to-r from-coral to-magenta text-white px-8 py-3.5 rounded-full font-medium text-center hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02]"
-                >
-                  Voir la galerie
-                </Link>
-                <Link
-                  href="/boutique"
-                  className="bg-white border-2 border-coral/30 text-coral px-8 py-3.5 rounded-full font-medium text-center hover:border-coral hover:shadow-md transition-all"
-                >
-                  Acheter une oeuvre
-                </Link>
+        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
+          <Image
+            src="/logotoutenmel.png"
+            alt="Toutenmel"
+            width={400}
+            height={200}
+            className={`mx-auto mb-6 w-[220px] sm:w-[320px] lg:w-[380px] h-auto ${heroPhoto ? "drop-shadow-lg" : ""}`}
+            priority
+          />
+          <p className={`text-lg sm:text-xl max-w-lg mx-auto leading-relaxed ${heroPhoto ? "text-white/90 drop-shadow" : "text-warm-gray"}`}>
+            {heroSubtitle}
+          </p>
+
+          {/* Stats rapides */}
+          {allOeuvres.length > 0 && (
+            <div className="mt-10 flex gap-8 justify-center">
+              <div>
+                <p className={`text-3xl sm:text-4xl font-bold ${heroPhoto ? "text-white" : "gradient-text"}`}>{allOeuvres.length}</p>
+                <p className={`text-xs uppercase tracking-wider ${heroPhoto ? "text-white/60" : "text-warm-gray/60"}`}>créations</p>
               </div>
-
-              {/* Stats rapides */}
-              {allOeuvres.length > 0 && (
-                <div className="mt-10 flex gap-8 justify-center lg:justify-start">
-                  <div>
-                    <p className="text-3xl font-bold gradient-text">{allOeuvres.length}</p>
-                    <p className="text-xs text-warm-gray/60 uppercase tracking-wider">créations</p>
-                  </div>
-                  {categories.length > 0 && (
-                    <div>
-                      <p className="text-3xl font-bold gradient-text">{categories.length}</p>
-                      <p className="text-xs text-warm-gray/60 uppercase tracking-wider">techniques</p>
-                    </div>
-                  )}
-                  {disponibles.length > 0 && (
-                    <div>
-                      <p className="text-3xl font-bold gradient-text">{disponibles.length}</p>
-                      <p className="text-xs text-warm-gray/60 uppercase tracking-wider">disponibles</p>
-                    </div>
-                  )}
+              {categories.length > 0 && (
+                <div>
+                  <p className={`text-3xl sm:text-4xl font-bold ${heroPhoto ? "text-white" : "gradient-text"}`}>{categories.length}</p>
+                  <p className={`text-xs uppercase tracking-wider ${heroPhoto ? "text-white/60" : "text-warm-gray/60"}`}>techniques</p>
+                </div>
+              )}
+              {disponibles.length > 0 && (
+                <div>
+                  <p className={`text-3xl sm:text-4xl font-bold ${heroPhoto ? "text-white" : "gradient-text"}`}>{disponibles.length}</p>
+                  <p className={`text-xs uppercase tracking-wider ${heroPhoto ? "text-white/60" : "text-warm-gray/60"}`}>disponibles</p>
                 </div>
               )}
             </div>
-
-            {/* Mosaïque droite — oeuvres récentes */}
-            {heroOeuvres.length > 0 && (
-              <div className="flex-1 max-w-lg w-full">
-                <div className="grid grid-cols-2 gap-3">
-                  {heroOeuvres.slice(0, 4).map((oeuvre, i) => (
-                    <Link
-                      key={oeuvre.id}
-                      href="/galerie"
-                      className={`art-card rounded-2xl overflow-hidden ${
-                        i === 0 ? "row-span-2 aspect-[3/4]" : "aspect-square"
-                      }`}
-                    >
-                      <img
-                        src={oeuvre.image_url!}
-                        alt={oeuvre.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Fallback si pas d'oeuvres avec images */}
-            {heroOeuvres.length === 0 && (
-              <div className="flex-1 max-w-lg w-full">
-                <div className="grid grid-cols-2 gap-3">
-                  {["from-coral to-magenta", "from-amber to-orange", "from-turquoise to-electric-blue", "from-violet to-magenta"].map((g, i) => (
-                    <div
-                      key={i}
-                      className={`rounded-2xl bg-gradient-to-br ${g} ${
-                        i === 0 ? "row-span-2 aspect-[3/4]" : "aspect-square"
-                      } flex items-center justify-center`}
-                    >
-                      <span className="text-white/50 font-heading text-2xl">
-                        {["🎨", "✨", "🖌️", "💫"][i]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </section>
 
-      {/* ═══════════════════════ OEUVRES RÉCENTES ═══════════════════════ */}
+      {/* ═══════════════════════ DERNIÈRES CRÉATIONS ═══════════════════════ */}
       {disponibles.length > 0 && (
         <section className="py-16 sm:py-24 relative">
           <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber/10 rounded-full blur-3xl" />
@@ -152,8 +118,8 @@ export default async function Home() {
               {disponibles.slice(0, 6).map((oeuvre, i) => {
                 const gradient = getGradient(oeuvre.category, i);
                 return (
-                  <div key={oeuvre.id} className="art-card bg-white rounded-2xl overflow-hidden">
-                    <div className={`aspect-square bg-gradient-to-br ${gradient} flex items-center justify-center relative group`}>
+                  <Link key={oeuvre.id} href="/boutique" className="art-card bg-white rounded-2xl overflow-hidden group">
+                    <div className={`aspect-square bg-gradient-to-br ${gradient} flex items-center justify-center relative`}>
                       {oeuvre.image_url ? (
                         <img
                           src={oeuvre.image_url}
@@ -165,6 +131,11 @@ export default async function Home() {
                           {oeuvre.title}
                         </span>
                       )}
+                      <div className="absolute inset-0 bg-warm-brown/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full">
+                          Voir
+                        </span>
+                      </div>
                     </div>
                     <div className="p-5">
                       <p className="text-xs font-bold text-magenta uppercase tracking-widest">
@@ -189,7 +160,7 @@ export default async function Home() {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

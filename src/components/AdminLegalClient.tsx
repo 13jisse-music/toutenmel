@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 
 interface SiteSettings {
   id: string;
@@ -13,6 +14,12 @@ interface SiteSettings {
   mediator_name: string | null;
   mediator_url: string | null;
   profile_photo_url: string | null;
+  hero_title: string | null;
+  hero_subtitle: string | null;
+  hero_photo_url: string | null;
+  about_subtitle: string | null;
+  about_text: string | null;
+  about_closing: string | null;
   updated_at: string | null;
 }
 
@@ -31,6 +38,12 @@ export default function AdminLegalClient({
     mediator_name: initial?.mediator_name || "CM2C",
     mediator_url: initial?.mediator_url || "https://www.cm2c.net",
     profile_photo_url: initial?.profile_photo_url || "",
+    hero_title: initial?.hero_title || "Toutenmel",
+    hero_subtitle: initial?.hero_subtitle || "",
+    hero_photo_url: initial?.hero_photo_url || "",
+    about_subtitle: initial?.about_subtitle || "Artiste peintre autodidacte",
+    about_text: initial?.about_text || "",
+    about_closing: initial?.about_closing || "Bienvenue dans mon univers. Bienvenue chez Toutenmel.",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -66,12 +79,10 @@ export default function AdminLegalClient({
   return (
     <div className="max-w-2xl">
       <h1 className="text-3xl font-bold text-warm-brown mb-2">
-        Informations légales
+        Mon site
       </h1>
       <p className="text-warm-gray mb-8">
-        Ces informations sont utilisées dans les pages Mentions légales, CGV,
-        et Politique de confidentialité de ton site. Remplis tout pour être en
-        règle !
+        Gère tes photos, textes du site et informations légales depuis cette page.
       </p>
 
       {/* Status indicator */}
@@ -94,6 +105,94 @@ export default function AdminLegalClient({
       )}
 
       <div className="space-y-8">
+        {/* Section photos */}
+        <section className="bg-white rounded-2xl p-6 shadow-sm">
+          <h2 className="font-heading text-2xl text-violet mb-1">
+            Mes photos
+          </h2>
+          <p className="text-warm-gray/70 text-sm mb-5">
+            Ta photo de profil (page À propos) et la photo d&apos;accueil du
+            site. Tu peux les uploader depuis ton téléphone.
+          </p>
+
+          <div className="space-y-6">
+            <PhotoUpload
+              label="Photo de profil"
+              help="S'affiche sur la page À propos. Choisis une belle photo de toi !"
+              currentUrl={form.profile_photo_url}
+              onUploaded={(url) => update("profile_photo_url", url)}
+            />
+            <PhotoUpload
+              label="Photo d'accueil"
+              help="S'affiche en fond de la page d'accueil. Une photo grand format de toi ou de ton atelier."
+              currentUrl={form.hero_photo_url}
+              onUploaded={(url) => update("hero_photo_url", url)}
+            />
+          </div>
+        </section>
+
+        {/* Section textes accueil */}
+        <section className="bg-white rounded-2xl p-6 shadow-sm">
+          <h2 className="font-heading text-2xl text-coral mb-1">
+            Texte d&apos;accueil
+          </h2>
+          <p className="text-warm-gray/70 text-sm mb-5">
+            Le texte qui apparaît sur la page d&apos;accueil de ton site.
+          </p>
+
+          <div className="space-y-4">
+            <Field
+              label="Titre principal"
+              value={form.hero_title}
+              onChange={(v) => update("hero_title", v)}
+              placeholder="Toutenmel"
+            />
+            <TextArea
+              label="Texte d'introduction"
+              value={form.hero_subtitle}
+              onChange={(v) => update("hero_subtitle", v)}
+              placeholder="Toiles, fluide art, aérographe & customisations uniques..."
+              rows={3}
+              help="Ce texte apparaît sous le logo sur la page d'accueil"
+            />
+          </div>
+        </section>
+
+        {/* Section textes À propos */}
+        <section className="bg-white rounded-2xl p-6 shadow-sm">
+          <h2 className="font-heading text-2xl text-magenta mb-1">
+            Page À propos
+          </h2>
+          <p className="text-warm-gray/70 text-sm mb-5">
+            Ton texte de présentation — raconte ton parcours, ta passion.
+          </p>
+
+          <div className="space-y-4">
+            <Field
+              label="Sous-titre"
+              value={form.about_subtitle}
+              onChange={(v) => update("about_subtitle", v)}
+              placeholder="Artiste peintre autodidacte"
+              help="Le petit texte qui apparaît au-dessus du titre"
+            />
+            <TextArea
+              label="Texte de présentation"
+              value={form.about_text}
+              onChange={(v) => update("about_text", v)}
+              placeholder="Depuis l'enfance, le dessin et la couleur..."
+              rows={10}
+              help="Sépare tes paragraphes par une ligne vide. Chaque paragraphe aura un style différent."
+            />
+            <Field
+              label="Phrase de conclusion"
+              value={form.about_closing}
+              onChange={(v) => update("about_closing", v)}
+              placeholder="Bienvenue dans mon univers. Bienvenue chez Toutenmel."
+              help="La phrase finale en gros sur la page À propos"
+            />
+          </div>
+        </section>
+
         {/* Section identité */}
         <section className="bg-white rounded-2xl p-6 shadow-sm">
           <h2 className="font-heading text-2xl text-coral mb-1">
@@ -198,25 +297,6 @@ export default function AdminLegalClient({
             />
           </div>
         </section>
-
-        {/* Section photo */}
-        <section className="bg-white rounded-2xl p-6 shadow-sm">
-          <h2 className="font-heading text-2xl text-violet mb-1">
-            Photo de profil
-          </h2>
-          <p className="text-warm-gray/70 text-sm mb-5">
-            Ta photo pour le site (page À propos, etc.). Tu pourras
-            l&apos;ajouter plus tard si tu veux.
-          </p>
-
-          <Field
-            label="URL de la photo"
-            placeholder="https://..."
-            value={form.profile_photo_url}
-            onChange={(v) => update("profile_photo_url", v)}
-            help="Pour l'instant, colle un lien vers ta photo. On ajoutera un bouton d'upload bientôt !"
-          />
-        </section>
       </div>
 
       {/* Save button */}
@@ -226,7 +306,7 @@ export default function AdminLegalClient({
           disabled={saving}
           className="bg-gradient-to-r from-coral to-magenta text-white px-8 py-3 rounded-full font-medium hover:shadow-lg transition-all disabled:opacity-50"
         >
-          {saving ? "Enregistrement..." : "Enregistrer"}
+          {saving ? "Enregistrement..." : "Enregistrer tout"}
         </button>
 
         {saved && (
@@ -275,6 +355,100 @@ export default function AdminLegalClient({
   );
 }
 
+/* ═══════════════════════ PHOTO UPLOAD ═══════════════════════ */
+
+function PhotoUpload({
+  label,
+  help,
+  currentUrl,
+  onUploaded,
+}: {
+  label: string;
+  help?: string;
+  currentUrl: string;
+  onUploaded: (url: string) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) throw new Error("Erreur lors de l'upload");
+      const data = await res.json();
+      onUploaded(data.url);
+    } catch (err) {
+      setUploadError((err as Error).message);
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  return (
+    <div>
+      <label className="block text-sm font-medium text-warm-brown mb-2">
+        {label}
+      </label>
+
+      <div className="flex items-start gap-4">
+        {/* Preview */}
+        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-cream border-2 border-dashed border-cream-dark flex-shrink-0">
+          {currentUrl ? (
+            <Image
+              src={currentUrl}
+              alt={label}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-warm-gray/40 text-3xl">
+              +
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFile}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="bg-gradient-to-r from-violet/80 to-magenta/80 text-white px-5 py-2 rounded-full text-sm font-medium hover:shadow-md transition-all disabled:opacity-50"
+          >
+            {uploading ? "Upload en cours..." : currentUrl ? "Changer la photo" : "Choisir une photo"}
+          </button>
+          {help && <p className="mt-1.5 text-xs text-warm-gray/60">{help}</p>}
+          {uploadError && (
+            <p className="mt-1 text-xs text-coral">{uploadError}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════ FIELD COMPONENTS ═══════════════════════ */
+
 function Field({
   label,
   value,
@@ -319,6 +493,38 @@ function Field({
           className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-cream text-warm-brown placeholder:text-warm-gray/40 focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral transition-colors"
         />
       )}
+      {help && <p className="mt-1 text-xs text-warm-gray/60">{help}</p>}
+    </div>
+  );
+}
+
+function TextArea({
+  label,
+  value,
+  onChange,
+  placeholder,
+  help,
+  rows = 4,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  help?: string;
+  rows?: number;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-warm-brown mb-1">
+        {label}
+      </label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        rows={rows}
+        className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-cream text-warm-brown placeholder:text-warm-gray/40 focus:outline-none focus:ring-2 focus:ring-coral/30 focus:border-coral transition-colors resize-y"
+      />
       {help && <p className="mt-1 text-xs text-warm-gray/60">{help}</p>}
     </div>
   );

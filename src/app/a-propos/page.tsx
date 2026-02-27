@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const metadata: Metadata = {
   title: "À propos - Toutenmel",
@@ -8,7 +10,33 @@ export const metadata: Metadata = {
   openGraph: { title: "À propos - Toutenmel", description: "Mel, artiste peintre autodidacte. Découvrez son parcours, son univers et sa passion pour la couleur.", url: "/a-propos" },
 };
 
-export default function APropos() {
+export const revalidate = 60;
+
+async function getSettings() {
+  const { data } = await supabaseAdmin
+    .from("site_settings")
+    .select("*")
+    .eq("id", "main")
+    .single();
+  return data;
+}
+
+const borderColors = ["border-coral", "border-magenta", "border-amber", "border-turquoise", "border-violet", "border-electric-blue"];
+
+export default async function APropos() {
+  const s = await getSettings();
+
+  const subtitle = s?.about_subtitle || "Artiste peintre autodidacte";
+  const photoUrl = s?.profile_photo_url;
+  const closing = s?.about_closing || "Bienvenue dans mon univers.\nBienvenue chez Toutenmel.";
+  const aboutText = s?.about_text || "";
+
+  // Split text into paragraphs (separated by empty lines)
+  const paragraphs = aboutText
+    .split(/\n\s*\n/)
+    .map((p: string) => p.trim())
+    .filter(Boolean);
+
   return (
     <div className="relative overflow-hidden">
       {/* Decorative blobs */}
@@ -18,62 +46,65 @@ export default function APropos() {
 
       <div className="relative py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-magenta font-medium mb-2">Artiste peintre autodidacte</p>
+          <p className="text-center text-magenta font-medium mb-2">{subtitle}</p>
           <h1 className="text-5xl sm:text-7xl font-bold text-center mb-10">
             <span className="gradient-text">À propos de Mel</span>
           </h1>
 
-          {/* Photo placeholder with colorful border */}
+          {/* Photo with colorful border */}
           <div className="relative max-w-2xl mx-auto mb-14">
             <div className="absolute -inset-1 bg-gradient-to-r from-coral via-amber to-magenta rounded-2xl blur-sm" />
-            <div className="relative aspect-video bg-gradient-to-br from-blush via-amber/20 to-magenta/20 rounded-2xl flex items-center justify-center">
-              <span className="text-warm-gray/50 font-heading text-3xl">
-                Photo de Mel dans son atelier
-              </span>
+            <div className="relative aspect-video rounded-2xl overflow-hidden">
+              {photoUrl ? (
+                <Image
+                  src={photoUrl}
+                  alt="Mel - Toutenmel"
+                  fill
+                  className="object-cover"
+                  quality={85}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blush via-amber/20 to-magenta/20 flex items-center justify-center">
+                  <span className="text-warm-gray/50 font-heading text-3xl">
+                    Photo de Mel dans son atelier
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Official text with artistic styling */}
+          {/* Dynamic text */}
           <div className="space-y-8 text-lg leading-relaxed">
-            <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center">
-              Mel, artiste peintre autodidacte.
-            </p>
+            {paragraphs.length > 0 ? (
+              <>
+                <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center">
+                  Mel, {subtitle.toLowerCase()}.
+                </p>
 
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-coral">
-              <p className="text-warm-brown">
-                Depuis l&apos;enfance, le dessin et la couleur ont toujours fait partie de ma vie.
-                Ce qui a commencé comme une passion instinctive est devenu, au fil des années,
-                un véritable langage artistique.
-              </p>
-            </div>
+                {paragraphs.map((paragraph: string, i: number) => (
+                  <div
+                    key={i}
+                    className={`bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 ${borderColors[i % borderColors.length]}`}
+                  >
+                    <p className="text-warm-brown">{paragraph}</p>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center">
+                  Mel, {subtitle.toLowerCase()}.
+                </p>
+                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-coral">
+                  <p className="text-warm-gray/60 italic">
+                    Le texte de présentation sera bientôt disponible.
+                  </p>
+                </div>
+              </>
+            )}
 
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-magenta">
-              <p className="text-warm-brown">
-                Autodidacte dans l&apos;âme, j&apos;ai construit mon univers en expérimentant sans
-                relâche — des Posca au fluide art, de la toile aux objets du quotidien, jusqu&apos;à
-                l&apos;aérographe. Chaque technique explorée est venue enrichir mon style et nourrir
-                ma créativité.
-              </p>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-amber">
-              <p className="text-warm-brown">
-                Ce qui traverse toute mon œuvre ? <span className="font-semibold text-coral">La couleur</span> et <span className="font-semibold text-amber">la lumière</span>. Elles sont au cœur de
-                chaque création, qu&apos;il s&apos;agisse d&apos;une toile, d&apos;une paire de
-                baskets customisée ou d&apos;une guitare transformée.
-              </p>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border-l-4 border-turquoise">
-              <p className="text-warm-brown">
-                Peindre, c&apos;est pour moi bien plus qu&apos;un acte créatif — c&apos;est
-                transmettre une émotion, ouvrir un dialogue, partager un regard sur le monde.
-              </p>
-            </div>
-
-            <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center pt-4">
-              Bienvenue dans mon univers.
-              <br />Bienvenue chez Toutenmel.
+            <p className="text-3xl sm:text-4xl font-heading gradient-text font-bold text-center pt-4 whitespace-pre-line">
+              {closing}
             </p>
           </div>
 
