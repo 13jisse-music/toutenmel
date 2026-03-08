@@ -207,7 +207,10 @@ export default async function Home() {
                       className={`art-card bg-gradient-to-br ${cat.gradient} rounded-2xl p-6 sm:p-8 text-white text-center`}
                     >
                       <span className="text-4xl">{cat.icon}</span>
-                      <h3 className="font-heading text-lg sm:text-2xl font-bold mt-3 break-words">{cat.name}</h3>
+                      <h3 className="font-heading text-base sm:text-2xl font-bold mt-3">
+                        <span className="hidden sm:inline">{cat.name}</span>
+                        <span className="sm:hidden">{cat.name === "Customisations" ? "Custom." : cat.name}</span>
+                      </h3>
                       <p className="text-white/70 text-sm mt-1">
                         {count} {count > 1 ? "créations" : "création"}
                       </p>

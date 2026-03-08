@@ -52,14 +52,9 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
         </FilterBtn>
       </div>
 
-      {/* TOILES */}
+      {/* TOILES / FLUIDE ART / AÉROGRAPHE */}
       {showToiles && toiles.length > 0 && (
         <section className="mb-16">
-          {filter === "tout" && (
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">
-              <span className="gradient-text">Toiles</span>
-            </h2>
-          )}
 
           {Object.entries(toilesByTechnique).map(([technique, items]) => (
             <div key={technique} className="mb-10">
