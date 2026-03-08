@@ -55,7 +55,7 @@ export default async function Home() {
           </>
         )}
 
-        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
+        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 pt-48 sm:pt-56 pb-10 sm:pb-14 text-center flex flex-col justify-end min-h-[85vh] sm:min-h-[70vh]">
           {!heroPhoto && (
             <Image
               src="/logotoutenmel.png"
