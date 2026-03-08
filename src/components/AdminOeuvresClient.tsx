@@ -163,6 +163,12 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                   </td>
                   <td className="px-6 py-4 text-right space-x-3">
                     <Link
+                      href={`/admin/oeuvres/${oeuvre.id}/certificat`}
+                      className="text-turquoise hover:text-electric-blue text-sm font-medium"
+                    >
+                      Certificat
+                    </Link>
+                    <Link
                       href={`/admin/oeuvres/${oeuvre.id}`}
                       className="text-coral hover:text-magenta text-sm font-medium"
                     >
@@ -204,6 +210,12 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                   <option value="vendu">Vendu</option>
                   <option value="sur commande">Sur commande</option>
                 </select>
+                <Link
+                  href={`/admin/oeuvres/${oeuvre.id}/certificat`}
+                  className="text-turquoise text-sm font-medium hover:text-electric-blue"
+                >
+                  Certificat
+                </Link>
                 <Link
                   href={`/admin/oeuvres/${oeuvre.id}`}
                   className="text-coral text-sm font-medium hover:text-magenta"

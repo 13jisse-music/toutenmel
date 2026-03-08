@@ -141,6 +141,11 @@ function ProductCard({ product, index }: { product: Oeuvre; index: number }) {
             {product.title}
           </span>
         )}
+        {product.status === "vendu" && (
+          <div className="absolute top-3 right-3 bg-warm-brown/90 text-white text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg z-10">
+            Vendu
+          </div>
+        )}
         <div className="absolute inset-0 bg-warm-brown/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full">
             Détails
@@ -163,23 +168,31 @@ function ProductCard({ product, index }: { product: Oeuvre; index: number }) {
           <p className="text-xs text-warm-gray/60 mt-1">{product.dimensions}</p>
         )}
         <div className="flex items-center justify-between mt-3">
-          <p className="text-2xl font-bold gradient-text">{product.price} &euro;</p>
+          <p className={`text-2xl font-bold ${product.status === "vendu" ? "text-warm-gray/50 line-through" : "gradient-text"}`}>{product.price} &euro;</p>
           <span
             className={`text-xs px-3 py-1 rounded-full font-medium ${
               product.status === "disponible"
                 ? "bg-turquoise/15 text-turquoise"
+                : product.status === "vendu"
+                ? "bg-warm-brown/10 text-warm-brown"
                 : "bg-amber/15 text-amber"
             }`}
           >
-            {product.status === "disponible" ? "Disponible" : "Sur commande"}
+            {product.status === "disponible" ? "Disponible" : product.status === "vendu" ? "Vendu" : "Sur commande"}
           </span>
         </div>
-        <Link
-          href={`/contact?oeuvre=${encodeURIComponent(product.title)}&prix=${product.price}&type=${product.status === "disponible" ? "achat" : "commande"}`}
-          className="block w-full mt-4 bg-gradient-to-r from-coral to-magenta text-white py-3 rounded-full font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02] text-center"
-        >
-          {product.status === "disponible" ? "Je suis intéressé(e)" : "Commander"}
-        </Link>
+        {product.status !== "vendu" ? (
+          <Link
+            href={`/contact?oeuvre=${encodeURIComponent(product.title)}&prix=${product.price}&type=${product.status === "disponible" ? "achat" : "commande"}`}
+            className="block w-full mt-4 bg-gradient-to-r from-coral to-magenta text-white py-3 rounded-full font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02] text-center"
+          >
+            {product.status === "disponible" ? "Je suis intéressé(e)" : "Commander"}
+          </Link>
+        ) : (
+          <p className="mt-4 text-center text-sm text-warm-gray/60 py-3">
+            Cette oeuvre a trouvé son collectionneur
+          </p>
+        )}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-cream-dark">
           <span className="text-xs text-warm-gray/50">Partager</span>
           <ShareButtons title={product.title} category={product.category} />

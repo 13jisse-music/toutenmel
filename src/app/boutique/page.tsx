@@ -18,7 +18,6 @@ export default async function Boutique() {
   const { data: oeuvres } = await supabase
     .from("oeuvres")
     .select("*")
-    .in("status", ["disponible", "sur commande"])
     .order("created_at", { ascending: false });
 
   return (
