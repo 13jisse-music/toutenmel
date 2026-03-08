@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sendCommandeNotification, sendCommandeConfirmation } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Nom, email et description sont requis" }, { status: 400 });
   }
 
-  const { data, error } = await supabase.from("commandes").insert({
+  const { data, error } = await supabaseAdmin.from("commandes").insert({
     client_name: body.name,
     client_email: body.email,
     type: "personnalisee",

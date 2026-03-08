@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sendContactNotification } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Tous les champs sont requis" }, { status: 400 });
   }
 
-  const { error } = await supabase.from("messages").insert({
+  const { error } = await supabaseAdmin.from("messages").insert({
     from_name: body.name,
     from_email: body.email,
     subject: body.subject,
