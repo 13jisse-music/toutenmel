@@ -9,24 +9,34 @@ import { getGradient } from "@/lib/gradients";
 
 const techniqueOrder = ["Toiles", "Fluide Art", "Aérographe"];
 
+const categoryGradients: Record<string, string> = {
+  "Toiles": "from-amber to-coral",
+  "Fluide Art": "from-coral to-magenta",
+  "Aérographe": "from-electric-blue to-turquoise",
+  "Customisations": "from-violet to-electric-blue",
+};
+
 export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
-  const [filter, setFilter] = useState<"tout" | "toiles" | "custom">("tout");
+  const [filter, setFilter] = useState("tout");
   const [lightboxOeuvre, setLightboxOeuvre] = useState<Oeuvre | null>(null);
 
-  const toiles = oeuvres.filter((o) => o.category !== "Customisations");
-  const customs = oeuvres
-    .filter((o) => o.category === "Customisations")
-    .sort((a, b) => a.title.localeCompare(b.title, "fr"));
+  // Build ordered categories that exist in the data
+  const allCategories = [...techniqueOrder, "Customisations"];
+  const existingCategories = allCategories.filter((cat) => oeuvres.some((o) => o.category === cat));
 
-  // Group toiles by technique
-  const toilesByTechnique: Record<string, Oeuvre[]> = {};
-  for (const t of techniqueOrder) {
-    const items = toiles.filter((o) => o.category === t);
-    if (items.length > 0) toilesByTechnique[t] = items;
+  // Filtered oeuvres
+  const filtered = filter === "tout" ? oeuvres : oeuvres.filter((o) => o.category === filter);
+
+  // Group by technique for display
+  const groupedByCategory: Record<string, Oeuvre[]> = {};
+  for (const cat of allCategories) {
+    const items = filtered.filter((o) => o.category === cat);
+    if (items.length > 0) {
+      groupedByCategory[cat] = cat === "Customisations"
+        ? items.sort((a, b) => a.title.localeCompare(b.title, "fr"))
+        : items;
+    }
   }
-
-  const showToiles = filter === "tout" || filter === "toiles";
-  const showCustoms = filter === "tout" || filter === "custom";
 
   if (oeuvres.length === 0) {
     return (
@@ -39,59 +49,36 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
   return (
     <>
       {/* Filter buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
         <FilterBtn active={filter === "tout"} onClick={() => setFilter("tout")} gradient="from-coral to-magenta">
           Tout
         </FilterBtn>
-        <FilterBtn active={filter === "toiles"} onClick={() => setFilter("toiles")} gradient="from-amber to-coral">
-          Toiles
-        </FilterBtn>
-        <FilterBtn active={filter === "custom"} onClick={() => setFilter("custom")} gradient="from-violet to-electric-blue">
-          <span className="hidden sm:inline">Customisations</span>
-          <span className="sm:hidden">Custom.</span>
-        </FilterBtn>
+        {existingCategories.map((cat) => (
+          <FilterBtn key={cat} active={filter === cat} onClick={() => setFilter(cat)} gradient={categoryGradients[cat] || "from-coral to-magenta"}>
+            <span className="hidden sm:inline">{cat}</span>
+            <span className="sm:hidden">{cat === "Customisations" ? "Custom." : cat}</span>
+          </FilterBtn>
+        ))}
       </div>
 
-      {/* TOILES / FLUIDE ART / AÉROGRAPHE */}
-      {showToiles && toiles.length > 0 && (
-        <section className="mb-16">
-
-          {Object.entries(toilesByTechnique).map(([technique, items]) => (
-            <div key={technique} className="mb-10">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent to-coral/30" />
-                <h3 className="text-lg sm:text-xl font-heading font-bold text-warm-brown whitespace-nowrap px-2">
-                  {technique}
-                </h3>
-                <div className="h-0.5 flex-1 bg-gradient-to-l from-transparent to-coral/30" />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} onOpenGallery={setLightboxOeuvre} />
-                ))}
-              </div>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* CUSTOMISATIONS */}
-      {showCustoms && customs.length > 0 && (
-        <section className="mb-16">
-          {filter === "tout" && (
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">
-              <span className="gradient-text">Customisations</span>
-            </h2>
-          )}
+      {/* All categories */}
+      {Object.entries(groupedByCategory).map(([category, items]) => (
+        <section key={category} className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-0.5 flex-1 bg-gradient-to-r from-transparent to-coral/30" />
+            <h3 className="text-lg sm:text-xl font-heading font-bold text-warm-brown whitespace-nowrap px-2">
+              {category}
+            </h3>
+            <div className="h-0.5 flex-1 bg-gradient-to-l from-transparent to-coral/30" />
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {customs.map((product, i) => (
+            {items.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} onOpenGallery={setLightboxOeuvre} />
             ))}
           </div>
         </section>
-      )}
+      ))}
 
       {/* Lightbox */}
       <PhotoGallery

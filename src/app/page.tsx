@@ -33,7 +33,7 @@ export default async function Home() {
   return (
     <div className="relative overflow-hidden">
       {/* ═══════════════════════ HERO ═══════════════════════ */}
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-center">
+      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-end">
         {/* Photo de fond */}
         {heroPhoto ? (
           <>
@@ -55,7 +55,7 @@ export default async function Home() {
           </>
         )}
 
-        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 pt-48 sm:pt-56 pb-10 sm:pb-14 text-center flex flex-col justify-end min-h-[85vh] sm:min-h-[70vh]">
+        <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 pt-40 sm:pt-48 pb-10 sm:pb-14 text-center">
           {!heroPhoto && (
             <Image
               src="/logotoutenmel.png"
