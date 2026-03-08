@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import ShareButtons from "@/components/ShareButtons";
+import PhotoGallery from "@/components/PhotoGallery";
 import type { Oeuvre } from "@/lib/types";
 import { getGradient } from "@/lib/gradients";
 
@@ -10,6 +11,7 @@ const techniqueOrder = ["Toiles", "Fluide Art", "Aérographe"];
 
 export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
   const [filter, setFilter] = useState<"tout" | "toiles" | "custom">("tout");
+  const [lightboxOeuvre, setLightboxOeuvre] = useState<Oeuvre | null>(null);
 
   const toiles = oeuvres.filter((o) => o.category !== "Customisations");
   const customs = oeuvres
@@ -50,7 +52,7 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
         </FilterBtn>
       </div>
 
-      {/* ═══════════ TOILES ═══════════ */}
+      {/* TOILES */}
       {showToiles && toiles.length > 0 && (
         <section className="mb-16">
           {filter === "tout" && (
@@ -71,7 +73,7 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {items.map((product, i) => (
-                  <ProductCard key={product.id} product={product} index={i} />
+                  <ProductCard key={product.id} product={product} index={i} onOpenGallery={setLightboxOeuvre} />
                 ))}
               </div>
             </div>
@@ -79,7 +81,7 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
         </section>
       )}
 
-      {/* ═══════════ CUSTOMISATIONS ═══════════ */}
+      {/* CUSTOMISATIONS */}
       {showCustoms && customs.length > 0 && (
         <section className="mb-16">
           {filter === "tout" && (
@@ -90,11 +92,20 @@ export default function BoutiqueClient({ oeuvres }: { oeuvres: Oeuvre[] }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {customs.map((product, i) => (
-              <ProductCard key={product.id} product={product} index={i} />
+              <ProductCard key={product.id} product={product} index={i} onOpenGallery={setLightboxOeuvre} />
             ))}
           </div>
         </section>
       )}
+
+      {/* Lightbox */}
+      <PhotoGallery
+        mainImage={lightboxOeuvre?.image_url ?? null}
+        galleryUrls={lightboxOeuvre?.gallery_urls ?? []}
+        title={lightboxOeuvre?.title ?? ""}
+        isOpen={!!lightboxOeuvre}
+        onClose={() => setLightboxOeuvre(null)}
+      />
     </>
   );
 }
@@ -124,12 +135,25 @@ function FilterBtn({
   );
 }
 
-function ProductCard({ product, index }: { product: Oeuvre; index: number }) {
+function ProductCard({
+  product,
+  index,
+  onOpenGallery,
+}: {
+  product: Oeuvre;
+  index: number;
+  onOpenGallery: (oeuvre: Oeuvre) => void;
+}) {
   const gradient = getGradient(product.category, index);
+  const hasImages = !!(product.image_url || (product.gallery_urls && product.gallery_urls.length > 0));
+  const galleryCount = (product.gallery_urls?.length ?? 0) + (product.image_url ? 1 : 0);
 
   return (
     <div className="art-card bg-white rounded-2xl overflow-hidden">
-      <div className={`aspect-square bg-gradient-to-br ${gradient} flex items-center justify-center relative group cursor-pointer`}>
+      <div
+        className={`aspect-square bg-gradient-to-br ${gradient} flex items-center justify-center relative group cursor-pointer`}
+        onClick={() => hasImages && onOpenGallery(product)}
+      >
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -146,9 +170,18 @@ function ProductCard({ product, index }: { product: Oeuvre; index: number }) {
             Vendu
           </div>
         )}
+        {/* Gallery count badge */}
+        {galleryCount > 1 && (
+          <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 z-10">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            {galleryCount}
+          </div>
+        )}
         <div className="absolute inset-0 bg-warm-brown/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <span className="text-white text-lg font-medium bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full">
-            Détails
+            {hasImages ? "Voir les photos" : "Détails"}
           </span>
         </div>
       </div>

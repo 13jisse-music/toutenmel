@@ -7,6 +7,7 @@ export interface Oeuvre {
   price: number;
   status: "disponible" | "vendu" | "sur commande";
   image_url: string | null;
+  gallery_urls: string[] | null;
   created_at: string;
   updated_at: string;
 }

@@ -10,6 +10,8 @@ export default function NouvelleOeuvre() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
+  const [galleryUploading, setGalleryUploading] = useState(false);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -32,6 +34,34 @@ export default function NouvelleOeuvre() {
     setUploading(false);
   }
 
+  async function handleGalleryUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setGalleryUploading(true);
+
+    for (const file of Array.from(files)) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (res.ok) {
+        setGalleryUrls((prev) => [...prev, data.url]);
+      } else {
+        alert("Erreur upload : " + data.error);
+      }
+    }
+
+    setGalleryUploading(false);
+    e.target.value = "";
+  }
+
+  function removeGalleryImage(index: number) {
+    setGalleryUrls((prev) => prev.filter((_, i) => i !== index));
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -46,6 +76,7 @@ export default function NouvelleOeuvre() {
       price: Number(form.get("price")),
       status: form.get("status"),
       image_url: imageUrl,
+      gallery_urls: galleryUrls.length > 0 ? galleryUrls : [],
     };
 
     const res = await fetch("/api/admin/oeuvres", {
@@ -76,7 +107,7 @@ export default function NouvelleOeuvre() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Photo upload */}
           <div className="bg-white rounded-2xl p-6">
-            <h2 className="text-lg font-bold text-warm-brown mb-4">Photo</h2>
+            <h2 className="text-lg font-bold text-warm-brown mb-4">Photo principale</h2>
             <label className="border-2 border-dashed border-blush rounded-xl p-10 text-center hover:border-coral transition-colors cursor-pointer block relative overflow-hidden">
               <input
                 type="file"
@@ -98,6 +129,56 @@ export default function NouvelleOeuvre() {
                   <div className="text-4xl mb-3">📷</div>
                   <p className="text-warm-gray font-medium">Cliquez pour ajouter une photo</p>
                   <p className="text-warm-gray/60 text-sm mt-1">PNG, JPG jusqu&apos;à 10 Mo</p>
+                </>
+              )}
+            </label>
+          </div>
+
+          {/* Gallery photos */}
+          <div className="bg-white rounded-2xl p-6">
+            <h2 className="text-lg font-bold text-warm-brown mb-2">Photos supplémentaires</h2>
+            <p className="text-sm text-warm-gray mb-4">
+              Ajoutez des photos sous différents angles, détails, ou en situation.
+            </p>
+
+            {galleryUrls.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-4">
+                {galleryUrls.map((url, i) => (
+                  <div key={i} className="relative group">
+                    <img
+                      src={url}
+                      alt={`Galerie ${i + 1}`}
+                      className="w-24 h-24 object-cover rounded-xl border-2 border-cream-dark"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(i)}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-coral text-white rounded-full flex items-center justify-center text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-magenta"
+                      title="Supprimer"
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label className="inline-flex items-center gap-2 border-2 border-dashed border-blush rounded-xl px-6 py-4 text-center hover:border-coral transition-colors cursor-pointer relative overflow-hidden">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleGalleryUpload}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              />
+              {galleryUploading ? (
+                <span className="text-coral font-medium">Upload en cours...</span>
+              ) : (
+                <>
+                  <svg className="w-5 h-5 text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-warm-gray font-medium">Ajouter des photos</span>
                 </>
               )}
             </label>
@@ -210,7 +291,7 @@ export default function NouvelleOeuvre() {
           <div className="flex gap-4">
             <button
               type="submit"
-              disabled={loading || uploading}
+              disabled={loading || uploading || galleryUploading}
               className="flex-1 bg-gradient-to-r from-coral to-magenta text-white py-4 rounded-full text-lg font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
             >
               {loading ? "Publication..." : "Publier l'oeuvre"}

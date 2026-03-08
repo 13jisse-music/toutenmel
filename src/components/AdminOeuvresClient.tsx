@@ -138,9 +138,9 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       {oeuvre.image_url ? (
-                        <img src={oeuvre.image_url} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                        <img src={oeuvre.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                       ) : (
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-coral/30 to-magenta/30 flex-shrink-0" />
+                        <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-coral/30 to-magenta/30 flex-shrink-0" />
                       )}
                       <span className="font-medium text-warm-brown">{oeuvre.title}</span>
                     </div>
@@ -192,9 +192,18 @@ export default function AdminOeuvresClient({ oeuvres: initial }: { oeuvres: Oeuv
         <div className="md:hidden divide-y divide-cream-dark">
           {filtered.map((oeuvre) => (
             <div key={oeuvre.id} className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-warm-brown">{oeuvre.title}</span>
-                <StatusBadge status={oeuvre.status} />
+              <div className="flex items-start gap-3 mb-2">
+                {oeuvre.image_url ? (
+                  <img src={oeuvre.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                ) : (
+                  <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-coral/30 to-magenta/30 flex-shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-warm-brown truncate">{oeuvre.title}</span>
+                    <StatusBadge status={oeuvre.status} />
+                  </div>
+                </div>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-warm-gray">{oeuvre.category}</span>

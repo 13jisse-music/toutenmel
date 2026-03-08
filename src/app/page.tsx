@@ -56,15 +56,17 @@ export default async function Home() {
         )}
 
         <div className="relative mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
-          <Image
-            src="/logotoutenmel.png"
-            alt="Toutenmel"
-            width={400}
-            height={200}
-            className={`mx-auto mb-6 w-[220px] sm:w-[320px] lg:w-[380px] h-auto ${heroPhoto ? "drop-shadow-lg" : ""}`}
-            priority
-          />
-          <p className={`text-lg sm:text-xl max-w-lg mx-auto leading-relaxed ${heroPhoto ? "text-white/90 drop-shadow" : "gradient-text"}`}>
+          {!heroPhoto && (
+            <Image
+              src="/logotoutenmel.png"
+              alt="Toutenmel"
+              width={400}
+              height={200}
+              className="mx-auto mb-6 w-[220px] sm:w-[320px] lg:w-[380px] h-auto"
+              priority
+            />
+          )}
+          <p className={`max-w-lg mx-auto leading-relaxed ${heroPhoto ? "text-xl sm:text-2xl font-semibold text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6)]" : "text-lg sm:text-xl gradient-text"}`}>
             {heroSubtitle}
           </p>
 
