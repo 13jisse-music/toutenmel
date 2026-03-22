@@ -17,9 +17,9 @@ const caveat = Caveat({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://toutenmel.fr"),
-  title: "Toutenmel - L'univers artistique de Mel",
+  title: "Toutenmel — Tableaux Originaux & Fluide Art | Artiste Peintre Aubagne",
   description:
-    "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations. Découvrez et achetez ses œuvres originales.",
+    "Toiles originales, fluide art et customisations uniques par Mel, artiste peintre à Aubagne. Pièces uniques à partir de 35€.",
   keywords: [
     "art",
     "peinture",
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "Toutenmel",
-    title: "Toutenmel - L'univers artistique de Mel",
-    description: "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations.",
+    title: "Toutenmel — Tableaux Originaux & Fluide Art | Artiste Peintre Aubagne",
+    description: "Toiles originales, fluide art et customisations uniques par Mel, artiste peintre à Aubagne. Pièces uniques à partir de 35€.",
     images: [{ url: "/logotoutenmel.png", width: 600, height: 300, alt: "Toutenmel" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Toutenmel - L'univers artistique de Mel",
-    description: "Mel, artiste peintre autodidacte. Toiles, fluide art, aérographe, customisations.",
+    title: "Toutenmel — Tableaux Originaux & Fluide Art | Artiste Peintre Aubagne",
+    description: "Toiles originales, fluide art et customisations uniques par Mel, artiste peintre à Aubagne. Pièces uniques à partir de 35€.",
     images: ["/logotoutenmel.png"],
   },
 };

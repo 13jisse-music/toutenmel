@@ -8,5 +8,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://toutenmel.fr/a-propos", lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: "https://toutenmel.fr/commandes", lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: "https://toutenmel.fr/contact", lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: "https://toutenmel.fr/mentions-legales", lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
   ];
 }
