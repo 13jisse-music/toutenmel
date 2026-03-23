@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { sendCommandeNotification, sendCommandeConfirmation } from "@/lib/email";
+import { sendTelegram } from "@/lib/telegram";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -21,6 +22,9 @@ export async function POST(request: NextRequest) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  // Notification Telegram
+  sendTelegram(`🛒 Nouvelle commande de ${body.name} (${body.email})\n${body.description.slice(0, 200)}`);
 
   // Notification admin (ne bloque pas la réponse)
   sendCommandeNotification({
