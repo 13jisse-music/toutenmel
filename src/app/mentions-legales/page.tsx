@@ -94,6 +94,17 @@ export default async function MentionsLegales() {
           </p>
         </Section>
 
+        <Section title="Données de navigation">
+          <p>
+            Nous collectons des données de navigation pseudonymisées (sans
+            cookies tiers) à des fins d&apos;amélioration du service. Aucune
+            donnée n&apos;est revendue à des tiers. Conservation maximale : 6
+            mois, puis suppression automatique. Conformément au RGPD, vous
+            pouvez demander la suppression de vos données à :
+            contact@jeanchristophemartinez.fr
+          </p>
+        </Section>
+
         <Section title="Droit applicable">
           <p>
             Les présentes mentions légales sont régies par le droit français.

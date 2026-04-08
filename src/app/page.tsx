@@ -111,6 +111,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/boutique"
+                data-track="btn_voir_boutique"
                 className="hidden sm:inline-flex text-coral hover:text-magenta font-semibold transition-colors text-lg"
               >
                 Tout voir &rarr;
@@ -171,6 +172,7 @@ export default async function Home() {
             <div className="mt-8 text-center sm:hidden">
               <Link
                 href="/boutique"
+                data-track="btn_voir_boutique"
                 className="inline-block bg-gradient-to-r from-coral to-magenta text-white px-8 py-3 rounded-full font-medium"
               >
                 Voir toute la boutique

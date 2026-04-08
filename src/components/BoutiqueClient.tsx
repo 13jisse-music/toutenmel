@@ -199,6 +199,7 @@ function ProductCard({
         {product.status !== "vendu" ? (
           <Link
             href={`/contact?oeuvre=${encodeURIComponent(product.title)}&prix=${product.price}&type=${product.status === "disponible" ? "achat" : "commande"}`}
+            data-track="btn_commander_tem"
             className="block w-full mt-4 bg-gradient-to-r from-coral to-magenta text-white py-3 rounded-full font-medium hover:shadow-lg hover:shadow-coral/30 transition-all hover:scale-[1.02] text-center"
           >
             {product.status === "disponible" ? "Je suis intéressé(e)" : "Commander"}
