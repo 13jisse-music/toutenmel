@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { trackBusinessEvent } from "@/hooks/useAnalytics";
 
 export default function ContactForm() {
   const searchParams = useSearchParams();
@@ -44,6 +45,7 @@ export default function ContactForm() {
 
     if (res.ok) {
       setSent(true);
+      trackBusinessEvent("contact_submit", { form: "contact" });
     } else {
       const data = await res.json();
       alert("Erreur : " + data.error);

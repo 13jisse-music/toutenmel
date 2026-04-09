@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackBusinessEvent } from "@/hooks/useAnalytics";
 
 export default function CommandeForm() {
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ export default function CommandeForm() {
 
     if (res.ok) {
       setSent(true);
+      trackBusinessEvent("contact_submit", { form: "commande" });
     } else {
       const data = await res.json();
       alert("Erreur : " + data.error);
